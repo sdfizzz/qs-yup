@@ -15,10 +15,10 @@ import { PARSE_QS_BASE_PARAMS, STRINGIFY_QS_BASE_PARAMS } from './constants'
 import { Shape } from './schema'
 
 export type TContextState<TState extends Record<string, unknown>> = {
-  state: TState;
-  setValue: (key: keyof TState, value: unknown) => void;
-  clear: () => void;
-};
+  state: TState
+  setValue: (key: keyof TState, value: unknown) => void
+  clear: () => void
+}
 
 const createQueryParamsContext = <TQueryParams extends Record<string, unknown>>(
   initialState: TQueryParams
@@ -34,10 +34,10 @@ const createQueryParamsContext = <TQueryParams extends Record<string, unknown>>(
 
 type QueryParamsContextProviderProps<TState extends Record<string, unknown>> =
   PropsWithChildren<{
-    Context: React.Context<TContextState<TState>>;
-    initialState: TState;
-    schema: ObjectSchema<Shape<TState>>;
-  }>;
+    Context: React.Context<TContextState<TState>>
+    initialState: TState
+    schema: ObjectSchema<Shape<TState>>
+  }>
 
 const QueryParamsContextProvider = <TState extends Record<string, unknown>>({
   children,
@@ -55,39 +55,47 @@ const QueryParamsContextProvider = <TState extends Record<string, unknown>>({
     [location.search]
   )
 
+  // useEffect(() => {
+  //   console.log('set state:', state)
+  // }, [state])
+
   useEffect(() => {
-    console.log('queryParams', queryParams)
+    // console.log('queryParams', queryParams)
     try {
       const state = schema.validateSync(queryParams, {
         abortEarly: false,
         stripUnknown: true,
       })
-      console.log('state from queryParams', state)
+      // console.log('state from queryParams', state)
       const casted = schema.cast(queryParams, { stripUnknown: true })
-      console.log('state casted', casted)
+      // console.log('state casted', casted)
       setState(state as TState)
     } catch (e) {
+      // console.log('state crushed', e)
       setState(initialState)
       console.error(e)
     }
-  }, [queryParams])
+  }, [initialState, queryParams, schema])
 
   const clear = useCallback(() => {
     navigate(location.pathname)
-  }, [])
+  }, [location.pathname, navigate])
 
-  const setValue = useCallback((key: keyof TState, value: unknown) => {
-    const newState = { ...(state ?? initialState), [key]: value || undefined }
-    console.log('state', state, 'newState', newState)
+  const setValue = useCallback(
+    (key: keyof TState, value: unknown) => {
+      const newState = { ...(state ?? initialState), [key]: value || undefined }
+      console.log('state', state, 'newState', newState)
 
-    if (!isEqual(state, newState)) {
-      const queryParamsString = qs.stringify(
-        newState,
-        STRINGIFY_QS_BASE_PARAMS
-      )
-      navigate(`${location.pathname}?${queryParamsString}`)
-    }
-  }, [])
+      if (!isEqual(state, newState)) {
+        const queryParamsString = qs.stringify(
+          newState,
+          STRINGIFY_QS_BASE_PARAMS
+        )
+        navigate(`${location.pathname}?${queryParamsString}`)
+      }
+    },
+    [state, initialState, navigate, location.pathname]
+  )
 
   return (
     <Context.Provider

@@ -2,9 +2,9 @@ import { Box, TextField } from '@mui/material'
 import React, { FC, useCallback } from 'react'
 import { BaseControlProps } from './types'
 
-type CustomInputProps = BaseControlProps<string>;
+type SearchInputProps = BaseControlProps<string>
 
-const CustomInput: FC<CustomInputProps> = ({ value, onChange }) => {
+const SearchInput: FC<SearchInputProps> = ({ value, onChange }) => {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value)
@@ -13,11 +13,11 @@ const CustomInput: FC<CustomInputProps> = ({ value, onChange }) => {
   )
 
   return (
-    <Box component="form" autoComplete="off">
+    <Box component='form' autoComplete='off'>
       <TextField
-        id="outlined-basic"
-        label="search"
-        variant="standard"
+        id='outlined-basic'
+        label='search'
+        variant='standard'
         value={value}
         onChange={handleChange}
       />
@@ -25,4 +25,4 @@ const CustomInput: FC<CustomInputProps> = ({ value, onChange }) => {
   )
 }
 
-export default CustomInput
+export default SearchInput

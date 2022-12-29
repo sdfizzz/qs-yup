@@ -2,9 +2,14 @@ export interface TPagination {
   /**
    * Указывает количество получаемых данных.
    */
-  limit: number;
+  limit: number
   /**
    * Указывает смещение.
    */
-  offset?: number;
+  offset?: number
+}
+
+export interface IOption<TValue = string> {
+  value: TValue
+  label: string
 }
