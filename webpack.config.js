@@ -1,5 +1,5 @@
-const path = await import('path')
-const HtmlWebpackPlugin = await import('html-webpack-plugin')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './src/index.tsx',
