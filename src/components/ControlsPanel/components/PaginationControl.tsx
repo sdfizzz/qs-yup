@@ -9,6 +9,8 @@ import { CustomContext } from '../../../../src/contexts/customContext'
 import { EQueryParams } from '../../../../src/contexts/enums'
 import type { TPagination } from '../../../../src/contexts/types'
 
+import styles from '../ControlsPanel.module.less'
+
 const PaginationControl = () => {
   const { state, setValue } = useContext(CustomContext)
 
@@ -25,13 +27,13 @@ const PaginationControl = () => {
 
   return (
     <div>
-      <div>
+      <div className={styles.container}>
         <Button
           variant='outlined'
           onClick={handleAdd}
           style={{ width: 'min-content' }}
         >
-          Add pagination
+          Add&nbsp;pagination
         </Button>
         <Button
           variant='outlined'

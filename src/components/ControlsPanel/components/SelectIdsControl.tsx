@@ -1,9 +1,11 @@
-import { MenuItem, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import React, { useCallback, useContext } from 'react'
 
 import { CustomContext } from '../../../../src/contexts/customContext'
 import { EQueryParams } from '../../../../src/contexts/enums'
 import { SELECT_NUMBER_OPTIONS } from '../../../contexts/constants'
+
+const SELECT_LABEL = 'select multi'
 
 const SelectIdsControl = () => {
   const { state, setValue } = useContext(CustomContext)
@@ -22,13 +24,15 @@ const SelectIdsControl = () => {
   const selected = state[EQueryParams.selectedIds] ?? []
 
   return (
-    <div>
+    <FormControl>
+      <InputLabel id='ids-select-label'>{SELECT_LABEL}</InputLabel>
       <Select
-        label='select multi'
-        placeholder='select multi'
+        label={SELECT_LABEL}
+        labelId='ids-select-label'
         onChange={handleChange}
         multiple
         value={selected}
+        defaultValue={[]}
       >
         {SELECT_NUMBER_OPTIONS.map(({ label, value }) => (
           <MenuItem key={`number_${value}`} value={value}>
@@ -38,7 +42,7 @@ const SelectIdsControl = () => {
       </Select>
       <br />
       <span>selected ids: {JSON.stringify(selected)}</span>
-    </div>
+    </FormControl>
   )
 }
 

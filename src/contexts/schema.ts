@@ -1,20 +1,23 @@
+import dayjs from 'dayjs'
 import * as yup from 'yup'
 
 import type { TCustomState } from './customContext'
 import { EQueryParams, EStatus } from './enums'
 import type { TPagination } from './types'
 
-export type ConditionalSchema<T> = 
-T extends string
+export type ConditionalSchema<T> = T extends string
   ? yup.StringSchema
   : T extends number
   ? yup.NumberSchema
   : T extends boolean
   ? yup.BooleanSchema
-  : T extends Record<any, any>
+  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends Record<any, any>
   ? yup.AnyObjectSchema
-  : T extends Array<any>
-  ? yup.ArraySchema<any, any>
+  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends Array<any>
+  ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    yup.ArraySchema<any, any>
   : yup.AnySchema
 
 export type Shape<Fields> = {
@@ -69,11 +72,15 @@ const statusesSchema = yup
   .optional()
   .default(undefined)
 
-const dateSchema = yup.string().optional().default(undefined)
+const dateSchema = yup
+  .string()
+  .test((value) => !value || dayjs(value).isValid())
+  .optional()
+  .default(undefined)
 
 const dateRangeSchema = yup
   .array()
-  .of(yup.string())
+  .of(yup.string().test((value) => !value || dayjs(value).isValid()))
   .when({
     is: (value: unknown) => value && typeof value === 'string',
     then: (schema) =>

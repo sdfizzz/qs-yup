@@ -3,6 +3,7 @@ import React, { useCallback, useContext } from 'react'
 
 import { CustomContext } from '../../../../src/contexts/customContext'
 import { EQueryParams } from '../../../../src/contexts/enums'
+import styles from '../ControlsPanel.module.less'
 
 const values = [3, 5, 6]
 
@@ -20,14 +21,14 @@ const NumberControl = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', gap: '12px' }}>
+      <div className={styles.container}>
         {values.map((v) => (
           <Button
             key={`key${v}`}
             variant='outlined'
             onClick={() => handleChange(v)}
           >
-            set {v}
+            set&nbsp;{v}
           </Button>
         ))}
         <Button variant='outlined' onClick={() => handleChange()}>

@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react'
 
+import { useEventCallback } from '@mui/material'
 import isEqual from 'lodash/isEqual'
 import noop from 'lodash/noop'
 import qs from 'qs'
@@ -55,27 +56,23 @@ const QueryParamsContextProvider = <TState extends Record<string, unknown>>({
     [location.search]
   )
 
-  // useEffect(() => {
-  //   console.log('set state:', state)
-  // }, [state])
+  const setQueryParams = useEventCallback((params: unknown) => {
+    const queryParamsString = qs.stringify(params, STRINGIFY_QS_BASE_PARAMS)
+    navigate(`${location.pathname}?${queryParamsString}`)
+  })
 
   useEffect(() => {
-    // console.log('queryParams', queryParams)
     try {
       const state = schema.validateSync(queryParams, {
         abortEarly: false,
         stripUnknown: true,
       })
-      // console.log('state from queryParams', state)
-      const casted = schema.cast(queryParams, { stripUnknown: true })
-      // console.log('state casted', casted)
       setState(state as TState)
     } catch (e) {
-      // console.log('state crushed', e)
-      setState(initialState)
+      setQueryParams(initialState)
       console.error(e)
     }
-  }, [initialState, queryParams, schema])
+  }, [initialState, navigate, queryParams, schema, setQueryParams])
 
   const clear = useCallback(() => {
     navigate(location.pathname)
@@ -84,17 +81,12 @@ const QueryParamsContextProvider = <TState extends Record<string, unknown>>({
   const setValue = useCallback(
     (key: keyof TState, value: unknown) => {
       const newState = { ...(state ?? initialState), [key]: value || undefined }
-      console.log('state', state, 'newState', newState)
 
       if (!isEqual(state, newState)) {
-        const queryParamsString = qs.stringify(
-          newState,
-          STRINGIFY_QS_BASE_PARAMS
-        )
-        navigate(`${location.pathname}?${queryParamsString}`)
+        setQueryParams(newState)
       }
     },
-    [state, initialState, navigate, location.pathname]
+    [state, initialState, setQueryParams]
   )
 
   return (

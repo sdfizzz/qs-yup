@@ -1,4 +1,5 @@
 import { Divider } from '@mui/material'
+import cn from 'classnames'
 import React, { useContext } from 'react'
 import { CustomContext } from '../../contexts/customContext'
 import { EQueryParams } from '../../contexts/enums'
@@ -17,7 +18,7 @@ const ControlsPanel = () => {
   const { state, setValue } = useContext(CustomContext)
 
   return (
-    <div className={styles.container}>
+    <div className={cn(styles.container, styles.container__column)}>
       <h2>Controls</h2>
       <ClearControl />
       <Divider />
