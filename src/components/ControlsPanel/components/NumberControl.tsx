@@ -32,7 +32,7 @@ const NumberControl = () => {
           </Button>
         ))}
         <Button variant='outlined' onClick={() => handleChange()}>
-          clear number value
+          clear
         </Button>
       </div>
       <span>numberValue: {numberValue}</span>
